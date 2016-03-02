@@ -37,7 +37,8 @@ if isscalar(tol)
     tol = tol*ones(nx,1);
 end
 
-nMax = 12;  %Maximum iteration count
+nMin = 4;   % Complete at least this many iterations
+nMax = 12;  % Maximum iteration count
 nSubSegment = 4;  % Sub-divide segment if max iteration is reached
 
 T = zeros(nMax,nMax,nx);  % (iteration, extrapolation, dimension)
@@ -65,7 +66,7 @@ for j=2:nMax
     % Check the error estimate for convergence
     Err(j,:) = T(j,k,:) - T(j-1,k-1,:);
     err = abs(Err(j,:))';
-    if all( err < tol )
+    if all( err < tol ) && j > nMin
         converged = true;
         break;
     end
